@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Student Academy</title>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #b2dfdb, #80cbc4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #0f172a;
+    }
+
+    .login-container {
+      background: #ffffff;
+      padding: 50px 55px;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      width: 400px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #004d40;
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 30px;
+    }
+
+    .input-group { margin-bottom: 20px; text-align: left; }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #b2dfdb;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    input:focus {
+      border-color: #00bfa5;
+      box-shadow: 0 0 6px rgba(0, 191, 165, 0.4);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #00bfa5, #00796b);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #00796b, #004d40);
+      transform: scale(1.03);
+    }
+
+    .error {
+      color: #d32f2f;
+      font-size: 14px;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="login-container">
+    <h2>🔐 Login</h2>
+
+    {% if messages %}
+      {% for msg in messages %}
+        {% if msg.tags == "error" %}
+          <div class="error">{{ msg }}</div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    <form method="post" action="{% url 'login' %}">
+      {% csrf_token %}
+
+      <div class="input-group">
+        <label>Email / Username</label>
+        <input type="text" name="username" placeholder="Enter email or username" required>
+      </div>
+
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Enter password" required>
+      </div>
+
+      <button type="submit">Login</button>
+    </form>
+  </div>
+
+</body>
+</html>

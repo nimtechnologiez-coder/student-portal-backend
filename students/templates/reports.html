@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Reports & Downloads</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body { font-family: "Poppins", sans-serif; background:#f3fffc; margin:0; }
+
+.container {
+  background: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  max-width: 1100px;
+  margin: 100px auto 30px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+h2 {
+  color:#00796b;
+  margin-bottom:25px;
+  text-align:center;
+  font-weight:600;
+}
+
+.filters {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-bottom:25px;
+}
+input, select, button {
+  padding:10px 14px;
+  border:1px solid #ccc;
+  border-radius:6px;
+}
+button {
+  background:#009688;
+  color:white;
+  border:none;
+}
+button:hover { background:#00796b; }
+
+table {
+  width:100%;
+  border-collapse:collapse;
+  margin-top:20px;
+}
+th, td {
+  padding:12px 10px;
+  border-bottom:1px solid #eee;
+  text-align:center;
+}
+th {
+  background:#e0f7f5;
+  color:#00796b;
+}
+</style>
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+<div class="container">
+
+  <h2>📊 Student Reports & Downloads</h2>
+
+  <form method="GET" class="filters">
+    
+    <input type="date" name="from_date" value="{{ from_date }}">
+    <input type="date" name="to_date" value="{{ to_date }}">
+
+    <select name="course">
+      <option value="">Select Course</option>
+      {% for c in courses %}
+        <option value="{{ c.course_name }}" {% if selected_course == c.course_name %}selected{% endif %}>
+          {{ c.course_name }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <button type="submit">🔍 Filter</button>
+
+    <a href="{% url 'export_excel' %}" style="text-decoration:none;">
+      <button type="button">⬇️ Download Excel</button>
+    </a>
+
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Student</th>
+        <th>Course</th>
+        <th>Joining Date</th>
+        <th>Course End Date</th>
+        <th>Total Downloads</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for r in report_data %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ r.student.user.first_name }}</td>
+        <td>{{ r.course }}</td>
+        <td>{{ r.joining_date }}</td>
+        <td>{{ r.end_date }}</td>
+        <td>{{ r.downloads }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="6" style="padding:20px;">No Records Found</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+
+</body>
+</html>

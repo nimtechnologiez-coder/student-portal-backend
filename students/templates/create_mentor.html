@@ -1,0 +1,140 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Create Mentor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+<style>
+body {
+  background: linear-gradient(135deg, #e0f7fa, #ffffff);
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+}
+
+.container-box {
+  max-width: 550px;
+  margin: 60px auto;
+  background: #fff;
+  padding: 35px;
+  border-radius: 18px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  border: 1px solid rgba(0,150,136,0.2);
+}
+
+.page-title {
+  color: #00796b;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+/* Back Button */
+.btn-back {
+  background: #eceff1;
+  color: #333;
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: 1px solid #b2dfdb;
+  font-weight: 600;
+  text-decoration: none !important;
+  display: inline-block;
+}
+.btn-back:hover { background: #cfd8dc; }
+
+/* Submit button */
+.btn-submit {
+  background: linear-gradient(90deg, #009688, #26a69a);
+  color: white !important;
+  border: none;
+  padding: 10px;
+  font-weight: 600;
+  border-radius: 12px;
+  text-align: center;
+  display: inline-block;
+}
+.btn-submit:hover { opacity: 0.9; }
+
+.form-control {
+  border-radius: 10px;
+  border: 1px solid #b2dfdb;
+  background: #f9fffe;
+}
+.form-control:focus {
+  border-color: #009688;
+  box-shadow: 0 0 5px rgba(0,150,136,0.3);
+}
+
+.success-box {
+  background: #e8f5e9;
+  border-left: 5px solid #2e7d32;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.success-text {
+  color: #2e7d32;
+  font-weight: 700;
+}
+
+</style>
+
+</head>
+
+<body>
+
+{% include 'navbar.html' %}
+
+<div class="container-box">
+
+    <h2 class="page-title">➕ Create New Mentor</h2>
+
+    <!-- ⭐ ERROR MESSAGE SHOWS HERE -->
+    {% if error %}
+    <div class="alert alert-danger text-center fw-bold">{{ error }}</div>
+    {% endif %}
+
+    <!-- FORM -->
+    <form method="POST">
+        {% csrf_token %}
+
+        <label class="mb-1">Full Name</label>
+        <input type="text" name="name" class="form-control mb-3" placeholder="Enter full name" required>
+
+        <label class="mb-1">Email</label>
+        <input type="email" name="email" class="form-control mb-3" placeholder="Enter email" required>
+
+        <label class="mb-1">Phone Number</label>
+        <input type="text" name="phone" class="form-control mb-3" placeholder="Enter phone number" required>
+
+        <!-- Submit Button -->
+        <button class="btn-submit w-100">Generate Mentor Login</button>
+
+        <!-- Back Button -->
+        <a href="/mentor-dashboard/" class="btn-back w-100 mt-3 text-center">← Back to Mentor Dashboard</a>
+    </form>
+
+    {% if username %}
+    <hr>
+
+    <div class="success-box mt-3">
+        <div class="success-text">✔ Mentor Created Successfully!</div>
+
+        <p><strong>Generated Username:</strong> {{ username }}</p>
+        <p><strong>Generated Password:</strong> {{ password }}</p>
+
+        {% if email_sent %}
+        <p style="color:#0277bd"><strong>Email Sent To:</strong> {{ email }}</p>
+        {% endif %}
+    </div>
+
+    <a href="/mentor-dashboard/" class="btn-submit w-100 mt-3">Go to Mentor Dashboard</a>
+    {% endif %}
+
+</div>
+
+</body>
+</html>

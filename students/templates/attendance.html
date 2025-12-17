@@ -1,0 +1,271 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Attendance | NimTech</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #e0f7fa;
+            font-family: "Poppins", sans-serif;
+        }
+
+        .container-box {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+            margin-top: 30px;
+            border: 1px solid #b2dfdb;
+        }
+
+        h3, h4 {
+            color: #00796b;
+            font-weight: 700;
+        }
+
+        .form-label {
+            color: #004d40;
+            font-weight: 600;
+        }
+
+        .btn-add-small {
+            background: linear-gradient(90deg,#009688,#26a69a);
+            border: none;
+            font-weight: 600;
+            padding: 6px 18px;
+            border-radius: 6px;
+            font-size: 14px;
+            display: inline-block;
+            color: #fff;
+        }
+
+        .btn-primary {
+            background: #00796b;
+            border: none;
+        }
+
+        .modal-header {
+            background: #009688;
+            color: white;
+        }
+
+        /* DELETE BUTTON (NO UNDERLINE) */
+        .btn-delete {
+            background:#d32f2f;
+            color:white!important;
+            padding:5px 10px;
+            border-radius:6px;
+            text-decoration:none !important;
+            border:none;
+            cursor:pointer;
+            display:inline-block;
+        }
+        .btn-delete:hover { background:#b71c1c; }
+    </style>
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+<div class="container">
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-info mt-3">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- ADD ATTENDANCE FORM -->
+    <div class="container-box">
+        <h3 class="text-center">📚 Add Student Attendance</h3>
+
+        <form method="POST" class="mt-4">
+            {% csrf_token %}
+
+            <div class="row">
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Select Student</label>
+                    <select class="form-select" name="student" required>
+                        {% for s in students %}
+                        <option value="{{ s.id }}">
+                            {{ s.user.first_name }} - {{ s.batch.batch_name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Date</label>
+                    <input type="date" class="form-control" name="date" required>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Status</label>
+                    <select class="form-select" name="status" required>
+                        <option value="Present">Present</option>
+                        <option value="Absent">Absent</option>
+                        <option value="Late">Late</option>
+                        <option value="Leave">Leave</option>
+                    </select>
+                </div>
+
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Remark (optional)</label>
+                    <input type="text" class="form-control" name="remark">
+                </div>
+
+            </div>
+
+            <button class="btn-add-small">Add Attendance</button>
+
+        </form>
+    </div>
+
+
+    <!-- ATTENDANCE RECORDS -->
+    <div class="container-box mt-4">
+        <h4 class="text-center mb-3">📋 Attendance Records</h4>
+
+        <table class="table table-bordered table-hover text-center">
+            <thead style="background:#009688;color:white;">
+                <tr>
+                    <th>Date</th>
+                    <th>Student</th>
+                    <th>Course</th>
+                    <th>Batch</th>
+                    <th>Status</th>
+                    <th>Remark</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for a in records %}
+                <tr>
+                    <td>{{ a.date }}</td>
+                    <td>{{ a.student.user.first_name }}</td>
+                    <td>{{ a.course.course_name }}</td>
+                    <td>{{ a.batch.batch_name }}</td>
+
+                    <td>
+                        {% if a.status == "Present" %}
+                            <span class="badge bg-success">Present</span>
+                        {% elif a.status == "Absent" %}
+                            <span class="badge bg-danger">Absent</span>
+                        {% elif a.status == "Late" %}
+                            <span class="badge bg-warning text-dark">Late</span>
+                        {% else %}
+                            <span class="badge bg-info">Leave</span>
+                        {% endif %}
+                    </td>
+
+                    <td>{{ a.remark }}</td>
+
+                    <td>
+                        <!-- EDIT BUTTON -->
+                        <button class="btn btn-primary btn-sm"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editModal{{ a.id }}">
+                            Edit
+                        </button>
+
+                        <!-- DELETE BUTTON (OPEN MODAL) -->
+                        <button class="btn-delete"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteModal{{ a.id }}">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+
+                <!-- EDIT MODAL -->
+                <div class="modal fade" id="editModal{{ a.id }}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5>Edit Attendance</h5>
+                                <button class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <form method="POST" action="{% url 'edit_attendance' a.id %}">
+                                {% csrf_token %}
+                                <div class="modal-body">
+
+                                    <label>Date</label>
+                                    <input type="date" class="form-control"
+                                           name="date"
+                                           value="{{ a.date|date:'Y-m-d' }}">
+
+                                    <label class="mt-3">Status</label>
+                                    <select class="form-select" name="status">
+                                        <option {% if a.status == 'Present' %}selected{% endif %}>Present</option>
+                                        <option {% if a.status == 'Absent' %}selected{% endif %}>Absent</option>
+                                        <option {% if a.status == 'Late' %}selected{% endif %}>Late</option>
+                                        <option {% if a.status == 'Leave' %}selected{% endif %}>Leave</option>
+                                    </select>
+
+                                    <label class="mt-3">Remark</label>
+                                    <input type="text" class="form-control" name="remark" value="{{ a.remark }}">
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button class="btn btn-success">Update</button>
+                                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- DELETE MODAL -->
+                <div class="modal fade" id="deleteModal{{ a.id }}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h5 class="modal-title">Confirm Delete</h5>
+                                <button class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <div class="modal-body">
+                                <p class="fw-bold text-danger">
+                                    Are you sure you want to delete this attendance entry?
+                                </p>
+                            </div>
+
+                            <div class="modal-footer">
+                                <a href="{% url 'delete_attendance' a.id %}"
+                                   class="btn btn-danger">Yes, Delete</a>
+                                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                {% endfor %}
+
+                {% if records|length == 0 %}
+                <tr>
+                    <td colspan="7" class="text-danger fw-bold">No attendance records found.</td>
+                </tr>
+                {% endif %}
+
+            </tbody>
+
+        </table>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    /* ==== Global Reset ==== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    /* ==== Navbar ==== */
+    .navbar {
+      background: linear-gradient(90deg, #00796B, #26A69A, #4DB6AC);
+      padding: 22px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      border-bottom: 3px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .navbar h2 {
+      color: #fff;
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 15px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #e0f2f1;
+      font-size: 17px;
+      font-weight: 500;
+      padding: 5px 15px;
+      border-radius: 8px;
+      transition: 0.3s;
+    }
+
+    .nav-links a:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+    }
+  </style>
+</head>
+
+<body>
+
+{% if user.is_authenticated %}
+<div class="navbar">
+
+  <!-- LEFT SIDE TITLE -->
+  {% if user.is_superuser %}
+      <h2>🎓 Admin Panel</h2>
+  {% else %}
+      <h2>👨‍🏫 Mentor Panel</h2>
+  {% endif %}
+
+  <!-- RIGHT SIDE LINKS -->
+  <div class="nav-links">
+
+    {% if user.is_superuser %}
+      <a href="{% url 'admin_dashboard' %}">Dashboard</a>
+      <a href="{% url 'student_list' %}">Students</a>
+      <a href="{% url 'admin_attendance_page' %}">Attendance</a>
+      <a href="{% url 'reports' %}">Reports</a>
+      <a href="{% url 'mentor_dashboard' %}">Mentors</a>
+      <a href="{% url 'task_list' %}">Task</a>
+
+    {% elif user.mentor %}
+      <!-- MENTOR LINKS -->
+      <a href="{% url 'mentor_today_topics' %}">My Topics</a>
+      <a href="{% url 'attendance_page' %}">Students</a>
+      <a href="{% url 'task_list' %}">Task</a>
+    {% endif %}
+
+    <!-- Logout Button -->
+    <a href="{% url 'logout' %}">Logout</a>
+
+  </div>
+
+</div>
+{% endif %}
+
+</body>
+</html>
