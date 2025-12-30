@@ -10,85 +10,19 @@
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:"Poppins",sans-serif;}
-
-body{
-  background:linear-gradient(135deg,#d1f2eb,#ffffff);
-  min-height:100vh;
-  color:#004d40;
-}
-
-.container-box{
-  width:95%;
-  max-width:1400px;
-  margin:40px auto;
-  background:white;
-  padding:25px;
-  border-radius:16px;
-  border:2px solid #b2dfdb;
-  box-shadow:0 5px 20px rgba(0,0,0,0.1);
-}
-
-.header-section h2{
-  color:#00796b;
-  font-size:28px;
-  font-weight:700;
-  margin-bottom:20px;
-}
-
-/* TABLE FIX */
-.table-wrapper{
-  width:100%;
-  overflow:hidden;
-}
-
-table{
-  width:100%;
-  table-layout:fixed;
-  border-collapse:collapse;
-}
-
-th{
-  background:linear-gradient(90deg,#009688,#26a69a);
-  padding:8px;
-  color:white;
-  text-align:center;
-  font-size:13px;
-  white-space:nowrap;
-}
-
-td{
-  padding:8px;
-  border-bottom:1px solid #e0f2f1;
-  text-align:center;
-  font-size:12px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-/* STATUS */
-.status-pill{
-  padding:4px 10px;
-  border-radius:50px;
-  color:white;
-  font-size:11px;
-  font-weight:600;
-}
-
+body{background:linear-gradient(135deg,#d1f2eb,#ffffff);min-height:100vh;color:#004d40;}
+.container-box{width:95%;max-width:1400px;margin:40px auto;background:white;padding:25px;border-radius:16px;border:2px solid #b2dfdb;box-shadow:0 5px 20px rgba(0,0,0,0.1);}
+.header-section h2{color:#00796b;font-size:28px;font-weight:700;margin-bottom:20px;}
+.table-wrapper{width:100%;overflow:hidden;}
+table{width:100%;table-layout:fixed;border-collapse:collapse;}
+th{background:linear-gradient(90deg,#009688,#26a69a);padding:8px;color:white;text-align:center;font-size:13px;}
+td{padding:8px;border-bottom:1px solid #e0f2f1;text-align:center;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.status-pill{padding:4px 10px;border-radius:50px;color:white;font-size:11px;font-weight:600;}
 .status-pending{background:#ef6c00;}
 .status-completed{background:#2e7d32;}
 .status-progress{background:#0288d1;}
 .status-review{background:#6a1b9a;}
-
-/* BUTTONS */
-.action-btn{
-  padding:5px 10px;
-  font-size:11px;
-  border:none;
-  border-radius:6px;
-  color:white;
-}
-
+.action-btn{padding:5px 10px;font-size:11px;border:none;border-radius:6px;color:white;}
 .btn-edit{background:#0288d1;}
 .btn-delete{background:#c62828;}
 </style>
@@ -108,17 +42,17 @@ td{
 <table>
 <thead>
 <tr>
-  <th style="width:4%">#</th>
-  <th style="width:8%">Date</th>
-  <th style="width:10%">Name</th>
-  <th style="width:12%">Course</th>
-  <th style="width:10%">Batch</th>
-  <th style="width:8%">Est.</th>
-  <th style="width:8%">Deadline</th>
-  <th style="width:12%">Notes</th>
-  <th style="width:8%">Status</th>
-  <th style="width:10%">Task PDF</th>
-  <th style="width:10%">Actions</th>
+  <th>#</th>
+  <th>Date</th>
+  <th>Name</th>
+  <th>Course</th>
+  <th>Batch</th>
+  <th>Est.</th>
+  <th>Deadline</th>
+  <th>Notes</th>
+  <th>Status</th>
+  <th>Task PDF</th>
+  <th>Actions</th>
 </tr>
 </thead>
 
@@ -127,9 +61,9 @@ td{
 <tr>
   <td>{{ forloop.counter }}</td>
   <td>{{ t.date|date:"d-m-Y" }}</td>
-  <td title="{{ t.student.user.first_name }}">{{ t.student.user.first_name }}</td>
-  <td title="{{ t.student.course.course_name }}">{{ t.student.course.course_name }}</td>
-  <td title="{{ t.student.batch.batch_name }}">{{ t.student.batch.batch_name }}</td>
+  <td>{{ t.student.user.first_name }}</td>
+  <td>{{ t.student.course.course_name }}</td>
+  <td>{{ t.student.batch.batch_name }}</td>
   <td>{{ t.estimated_time|default:"-" }}</td>
   <td>{% if t.deadline %}{{ t.deadline|date:"d-m-Y" }}{% else %}-{% endif %}</td>
   <td title="{{ t.task_notes }}">{{ t.task_notes|default:"-"|truncatechars:15 }}</td>
@@ -146,14 +80,9 @@ td{
     {% endif %}
   </td>
 
-  <!-- PDF COLUMN -->
   <td>
     {% if t.submissions.exists %}
-      <a href="{{ t.submissions.first.file.url }}"
-         class="btn btn-success btn-sm"
-         target="_blank">
-         View
-      </a>
+      <a href="{{ t.submissions.first.file.url }}" class="btn btn-success btn-sm" target="_blank">View</a>
     {% else %}
       <span class="text-danger">No File</span>
     {% endif %}
@@ -169,16 +98,12 @@ td{
         '{{ t.deadline|date:"Y-m-d" }}',
         `{{ t.task_notes|escapejs }}`,
         '{{ t.status }}'
-      )">
-      Edit
-    </button>
+      )">Edit</button>
 
     <button class="action-btn btn-delete"
       data-bs-toggle="modal"
       data-bs-target="#deleteModal"
-      onclick="deleteTask('{{ t.id }}')">
-      Delete
-    </button>
+      onclick="deleteTask('{{ t.id }}')">Delete</button>
   </td>
 </tr>
 {% endfor %}
@@ -191,31 +116,26 @@ td{
 <div class="modal fade" id="editModal">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content p-3">
-
       <h4 class="text-center text-primary mb-3">Edit Task</h4>
 
       <form method="POST" id="editForm">
         {% csrf_token %}
-        <input type="hidden" name="task_id" id="task_id">
 
-        <label><b>Estimated Time (Hours)</b></label>
-        <input type="number" step="0.1" name="estimated_time"
-               id="task_estimated" class="form-control mb-2">
+        <label>Estimated Time</label>
+        <input type="number" step="0.1" name="estimated_time" id="task_estimated" class="form-control mb-2">
 
-        <label><b>Task Deadline</b></label>
-        <input type="date" name="deadline"
-               id="task_deadline" class="form-control mb-2">
+        <label>Deadline</label>
+        <input type="date" name="deadline" id="task_deadline" class="form-control mb-2">
 
-        <label><b>Task Notes</b></label>
-        <textarea name="task_notes"
-                  id="task_notes" class="form-control mb-2"></textarea>
+        <label>Task Notes</label>
+        <textarea name="task_notes" id="task_notes" class="form-control mb-2"></textarea>
 
-        <label><b>Status</b></label>
+        <label>Status</label>
         <select class="form-control" name="status" id="task_status">
           <option value="pending">Pending</option>
           <option value="completed">Completed</option>
           <option value="not_completed">Not Completed</option>
-          <option value="review">On Review</option>
+          <option value="review">Review</option>
         </select>
 
         <button class="btn btn-success w-100 mt-3">Update Task</button>
@@ -228,11 +148,8 @@ td{
 <div class="modal fade" id="deleteModal">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content p-3">
-
       <h4 class="text-center text-danger mb-3">Delete Task?</h4>
-      <p class="text-center">Are you sure you want to delete this task?</p>
-
-      <div class="d-flex gap-2 mt-3">
+      <div class="d-flex gap-2">
         <button class="btn btn-secondary w-50" data-bs-dismiss="modal">Cancel</button>
         <a id="deleteBtn" class="btn btn-danger w-50">Delete</a>
       </div>
@@ -242,16 +159,17 @@ td{
 
 <script>
 function editTask(id, est, deadline, notes, status){
-  document.getElementById("task_id").value=id;
-  document.getElementById("task_estimated").value=est||"";
-  document.getElementById("task_deadline").value=deadline||"";
-  document.getElementById("task_notes").value=notes||"";
-  document.getElementById("task_status").value=status;
-  document.getElementById("editForm").action="/edit_topic/"+id+"/";
+  document.getElementById("task_estimated").value = est || "";
+  document.getElementById("task_deadline").value = deadline || "";
+  document.getElementById("task_notes").value = notes || "";
+  document.getElementById("task_status").value = status;
+
+  // ✅ FIXED URL
+  document.getElementById("editForm").action = "/edit_task/" + id + "/";
 }
 
 function deleteTask(id){
-  document.getElementById("deleteBtn").href="/delete_topic/"+id+"/";
+  document.getElementById("deleteBtn").href = "/delete_topic/" + id + "/";
 }
 </script>
 

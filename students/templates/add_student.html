@@ -90,15 +90,6 @@ button {
   color: #333;
 }
 .btn-cancel:hover { background: #cfd8dc; }
-
-.modal-header {
-  background: #009688;
-  color: white;
-}
-.modal-footer .btn {
-  border-radius: 10px;
-  padding: 8px 18px;
-}
 </style>
 </head>
 
@@ -109,7 +100,6 @@ button {
 <div class="container">
   <h2>➕ Add New Student</h2>
 
-  <!-- IMPORTANT: ADD enctype for image upload -->
   <form method="POST" action="{% url 'add_student' %}" enctype="multipart/form-data">
     {% csrf_token %}
 
@@ -126,14 +116,13 @@ button {
       </div>
     </div>
 
-    <!-- ROW 1.5 — NEW PROFILE PHOTO UPLOAD -->
+    <!-- PROFILE PHOTO -->
     <div class="row-box">
       <div class="col-box">
         <label>Profile Photo</label>
         <input type="file" name="profile_photo" accept="image/*">
       </div>
     </div>
-    <!-- END NEW ROW -->
 
     <!-- ROW 2 -->
     <div class="row-box">
@@ -157,7 +146,7 @@ button {
     <div class="row-box">
       <div class="col-box">
         <label>Batch</label>
-        <input type="text" name="batch_name" placeholder="Enter batch manually" required>
+        <input type="text" name="batch_name" required>
       </div>
 
       <div class="col-box">
@@ -169,8 +158,23 @@ button {
     <!-- ROW 4 -->
     <div class="row-box">
       <div class="col-box">
-        <label>Course Duration (Days)</label>
+        <label>Course Duration</label>
         <input type="text" name="duration" required>
+      </div>
+    </div>
+
+    <!-- ✅ AMOUNT FIELD (DB SAVES CORRECTLY) -->
+    <div class="row-box">
+      <div class="col-box">
+        <label>Amount (₹)</label>
+        <input
+          type="number"
+          name="amount"
+          placeholder="Enter course amount"
+          min="0"
+          step="0.01"
+          required
+        >
       </div>
     </div>
 
@@ -186,11 +190,11 @@ button {
       </div>
     </div>
 
-    <!-- AUTO VALIDITY -->
+    <!-- VALIDITY -->
     <div class="row-box">
       <div class="col-box">
         <label>Validity (Auto 10 Months)</label>
-        <input type="text" name="validity" value="10 Months" readonly>
+        <input type="text" value="10 Months" readonly>
       </div>
     </div>
 
@@ -205,51 +209,22 @@ button {
     <!-- BUTTONS -->
     <div class="btn-row">
       <button type="submit" class="btn-save">Add Student</button>
-      <button type="button" class="btn-cancel" onclick="window.location.href='/student_list/'">Cancel</button>
+      <button type="button" class="btn-cancel" onclick="window.location.href='/student_list/'">
+        Cancel
+      </button>
     </div>
 
   </form>
 </div>
 
-<!-- SUCCESS MODAL -->
-<div class="modal fade" id="successModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <h5 class="modal-title">✔ Student Added Successfully</h5>
-      </div>
-
-      <div class="modal-body text-center">
-        <p style="font-size:18px; color:#00796b;">The student has been added successfully!</p>
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-success" onclick="window.location.href='/student_list/'">Go to Student List</button>
-      </div>
-
-    </div>
-  </div>
-</div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-document.getElementById("student_type").addEventListener("change", function() {
-    let type = this.value;
-    if (type === "full") {
-        document.getElementById("access_type").value = "All Access";
-    } else if (type === "part") {
-        document.getElementById("access_type").value = "Video Only Access";
-    }
+document.getElementById("student_type").addEventListener("change", function () {
+  this.value === "full"
+    ? document.getElementById("access_type").value = "All Access"
+    : document.getElementById("access_type").value = "Video Only Access";
 });
-</script>
-
-<script>
-const urlParams = new URLSearchParams(window.location.search);
-if (urlParams.get("success") === "1") {
-    new bootstrap.Modal(document.getElementById('successModal')).show();
-}
 </script>
 
 </body>
