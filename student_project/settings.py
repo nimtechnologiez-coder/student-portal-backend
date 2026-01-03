@@ -138,6 +138,7 @@ LOGIN_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 
+
 # --------------------------------------------------
 # CORS
 # --------------------------------------------------
@@ -148,3 +149,24 @@ CORS_ALLOW_ALL_ORIGINS = True
 # DEFAULT FIELD
 # --------------------------------------------------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# settings.py
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "django.server": {
+            "handlers": ["console"],
+            "level": "ERROR",  # suppress 404 logs
+        },
+    },
+}
+TIME_ZONE = 'Asia/Kolkata'
+
+USE_TZ = True
+

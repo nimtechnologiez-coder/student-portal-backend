@@ -74,8 +74,10 @@
       <a href="{% url 'admin_dashboard' %}">Dashboard</a>
       <a href="{% url 'student_list' %}">Students</a>
       <a href="{% url 'admin_attendance_page' %}">Attendance</a>
+       <a href="{% url 'add_task' %}">New Task</a>
       <a href="{% url 'reports' %}">Reports</a>
       <a href="{% url 'mentor_dashboard' %}">Mentors</a>
+        <a href="{% url 'admin_payment_list' %}">Payment</a>
       <a href="{% url 'task_list' %}">Task</a>
 
     {% elif user.mentor %}
