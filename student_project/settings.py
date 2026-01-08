@@ -19,7 +19,7 @@ SECRET_KEY = os.environ.get(
     "django-insecure-temp-key-for-local-only"
 )
 
-DEBUG = os.environ.get("DEBUG", "False") == "True"
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -41,7 +41,7 @@ INSTALLED_APPS = [
 
 
 # --------------------------------------------------
-# MIDDLEWARE (ONLY ONE BLOCK – ORDER MATTERS)
+# MIDDLEWARE
 # --------------------------------------------------
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -62,7 +62,6 @@ MIDDLEWARE = [
 # URLS & WSGI
 # --------------------------------------------------
 ROOT_URLCONF = 'student_project.urls'
-
 WSGI_APPLICATION = 'student_project.wsgi.application'
 
 
@@ -87,16 +86,19 @@ TEMPLATES = [
 
 
 # --------------------------------------------------
-# DATABASE (RENDER + RAILWAY MYSQL)
+# DATABASE (XAMPP MYSQL)
 # --------------------------------------------------
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('DATABASE_NAME'),
-        'USER': os.environ.get('DATABASE_USER'),
-        'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
-        'HOST': os.environ.get('DATABASE_HOST'),
-        'PORT': os.environ.get('DATABASE_PORT', '3306'),
+        'NAME': 'studentportalnew',   # database name
+        'USER': 'root',
+        'PASSWORD': 'Saikumar278',              # empty for XAMPP
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
     }
 }
 
@@ -116,7 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # INTERNATIONALIZATION
 # --------------------------------------------------
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = True
 
@@ -138,7 +140,6 @@ LOGIN_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 
-
 # --------------------------------------------------
 # CORS
 # --------------------------------------------------
@@ -150,7 +151,10 @@ CORS_ALLOW_ALL_ORIGINS = True
 # --------------------------------------------------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# settings.py
+
+# --------------------------------------------------
+# LOGGING
+# --------------------------------------------------
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -162,11 +166,7 @@ LOGGING = {
     "loggers": {
         "django.server": {
             "handlers": ["console"],
-            "level": "ERROR",  # suppress 404 logs
+            "level": "ERROR",
         },
     },
 }
-TIME_ZONE = 'Asia/Kolkata'
-
-USE_TZ = True
-

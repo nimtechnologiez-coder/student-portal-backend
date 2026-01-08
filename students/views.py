@@ -1631,7 +1631,7 @@ from students.models import Topic
 
 # ---------------------------------------------------
 # 🟥 DELETE TASK
-# ---------------------------------------------------
+# ---------------------------------------------------_login
 @login_required
 def delete_topic(request, topic_id):
 
@@ -2439,18 +2439,20 @@ def submit_payment_api(request):
             status=400
         )
 
+    # ✅ READ FORM DATA
     user_id = request.POST.get("user_id")
     amount = request.POST.get("amount")
     utr = request.POST.get("utr")
     screenshot = request.FILES.get("screenshot")
 
-    if not all([user_id, amount, utr, screenshot]):
+    # ✅ REQUIRED CHECK
+    if not user_id or not amount or not utr or not screenshot:
         return JsonResponse(
             {"status": "error", "message": "All fields required"},
             status=400
         )
 
-    # 🔢 Validate amount
+    # ✅ AMOUNT VALIDATION
     try:
         amount = float(amount)
     except ValueError:
@@ -2465,17 +2467,18 @@ def submit_payment_api(request):
             status=400
         )
 
-    student = Student.objects.filter(user__id=user_id).first()
+    # ✅ GET STUDENT (USER → STUDENT RELATION)
+    student = Student.objects.filter(user_id=user_id).first()
     if not student:
         return JsonResponse(
             {"status": "error", "message": "Student not found"},
             status=404
         )
 
-    # 💰 COURSE TOTAL
+    # ✅ COURSE TOTAL
     total_amount = float(student.amount or 0)
 
-    # 💵 APPROVED PAID
+    # ✅ APPROVED PAYMENTS ONLY
     paid_amount = (
         Payment.objects
         .filter(student=student, status="approved")
@@ -2503,7 +2506,7 @@ def submit_payment_api(request):
             status=400
         )
 
-    # ✅ CREATE PAYMENT (PENDING)
+    # ✅ SAVE PAYMENT (PENDING)
     Payment.objects.create(
         student=student,
         amount_paid=amount,
@@ -2512,15 +2515,17 @@ def submit_payment_api(request):
         status="pending"
     )
 
-    return JsonResponse({
-        "status": "success",
-        "message": "Payment submitted for admin approval"
-    })
-
+    return JsonResponse(
+        {
+            "status": "success",
+            "message": "Payment submitted for admin approval"
+        }
+    )
 
 # ==================================================
 # STUDENT – PAYMENT AMOUNT INFO (API)
 # ==================================================
+
 @csrf_exempt
 def payment_amount_api(request):
     user_id = request.GET.get("user_id")
@@ -2648,6 +2653,7 @@ def task_list(request):
     )
 
     return render(request, "task_details.html", {
+
         "tasks": tasks
     })
 
