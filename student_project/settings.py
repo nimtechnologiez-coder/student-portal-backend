@@ -37,6 +37,8 @@ INSTALLED_APPS = [
 
     'corsheaders',
     'students',
+    "cloudinary",
+    "cloudinary_storage",
 ]
 
 
