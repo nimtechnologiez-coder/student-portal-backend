@@ -4,6 +4,7 @@ Django settings for student_project project.
 
 from pathlib import Path
 import os
+import dj_database_url
 
 # --------------------------------------------------
 # BASE DIRECTORY
@@ -91,17 +92,24 @@ TEMPLATES = [
 # --------------------------------------------------
 # DATABASE (RENDER + RAILWAY MYSQL)
 # --------------------------------------------------
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('DATABASE_NAME'),
-        'USER': os.environ.get('DATABASE_USER'),
-        'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
-        'HOST': os.environ.get('DATABASE_HOST'),
-        'PORT': os.environ.get('DATABASE_PORT', '3306'),
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': os.environ.get('DATABASE_NAME'),
+#         'USER': os.environ.get('DATABASE_USER'),
+#         'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
+#         'HOST': os.environ.get('DATABASE_HOST'),
+#         'PORT': os.environ.get('DATABASE_PORT', '3306'),
+#     }
+# }
 
+DATABASES = {
+    "default": dj_database_url.config(
+        default=os.environ.get("DATABASE_URL"),
+        conn_max_age=600,
+        ssl_require=True,
+    )
+}
 
 # --------------------------------------------------
 # PASSWORD VALIDATION
@@ -168,6 +176,16 @@ LOGGING = {
         },
     },
 }
+
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": "dlddk1jbu",
+    "API_KEY": "544786841661555",
+    "API_SECRET": "0BbvNaGF72CuGlVVLgvRYNSghOQ",
+}
+
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
+
 TIME_ZONE = 'Asia/Kolkata'
 
 USE_TZ = True
