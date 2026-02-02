@@ -1,1 +1,1 @@
-web: gunicorn student_backend.wsgi
+web: gunicorn student_project.wsgi
