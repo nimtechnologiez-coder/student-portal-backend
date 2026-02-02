@@ -41,7 +41,16 @@ class Command(BaseCommand):
         else:
             self.stdout.write(self.style.WARNING(f'Student profile for {username} already exists.'))
 
-        # 3. Create Superuser (optional but helpful)
-        if not User.objects.filter(is_superuser=True).exists():
-            admin_user = User.objects.create_superuser('admin', 'admin@example.com', 'admin123')
+        # 3. Create/Update Superuser (admin / admin123)
+        admin_user = User.objects.filter(username='admin').first()
+        if not admin_user:
+            User.objects.create_superuser('admin', 'admin@example.com', 'admin123')
             self.stdout.write(self.style.SUCCESS('Successfully created superuser: admin / admin123'))
+        else:
+            admin_user.set_password('admin123')
+            admin_user.is_superuser = True
+            admin_user.is_staff = True
+            admin_user.save()
+            self.stdout.write(self.style.SUCCESS('Successfully updated superuser: admin / admin123'))
+
+        self.stdout.write(self.style.SUCCESS('Initial setup completed successfully.'))
