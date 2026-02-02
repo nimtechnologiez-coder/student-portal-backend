@@ -8,6 +8,10 @@ class Command(BaseCommand):
     help = 'Setup initial student user for Render deployment'
 
     def handle(self, *args, **kwargs):
+        from django.conf import settings
+        db_engine = settings.DATABASES['default']['ENGINE']
+        self.stdout.write(f"Using database engine: {db_engine}")
+        
         username = 'nimstudent'
         password = '123'
         email = 'nimstudent@example.com'
